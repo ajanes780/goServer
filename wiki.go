@@ -22,7 +22,20 @@ var routes = map[string]string{
 
 var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
 
-var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
+var validPath = regexp.MustCompile("^/(edit|save|view|)/([a-zA-Z0-9]+)$")
+
+func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		m := validPath.FindStringSubmatch(r.URL.Path)
+
+		if m == nil {
+			http.NotFound(w, r)
+			return
+		}
+
+		fn(w, r, m[2])
+	}
+}
 
 func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
 	m := validPath.FindStringSubmatch(r.URL.Path)
@@ -56,12 +69,8 @@ func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 
 }
 
-func viewHandler(w http.ResponseWriter, r *http.Request) {
-	title, err := getTitle(w, r)
+func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
 
-	if err != nil {
-		return
-	}
 	p, err := loadPage(title)
 
 	if err != nil {
@@ -71,11 +80,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "view", p)
 }
 
-func editHandler(w http.ResponseWriter, r *http.Request) {
-	title, err := getTitle(w, r)
-	if err != nil {
-		return
-	}
+func editHandler(w http.ResponseWriter, r *http.Request, title string) {
 
 	p, err := loadPage(title)
 	if err != nil {
@@ -85,14 +90,11 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "edit", p)
 }
 
-func saveHandler(w http.ResponseWriter, r *http.Request) {
-	title, err := getTitle(w, r)
-	if err != nil {
-		return
-	}
+func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
+
 	body := r.FormValue("body")
 	p := &Page{Title: title, Body: []byte(body)}
-	err = p.save()
+	err := p.save()
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -103,9 +105,10 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	http.HandleFunc(routes["view"], viewHandler)
-	http.HandleFunc(routes["edit"], editHandler)
-	http.HandleFunc(routes["save"], saveHandler)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
+	http.HandleFunc(routes["view"], makeHandler(viewHandler))
+	http.HandleFunc(routes["edit"], makeHandler(editHandler))
+	http.HandleFunc(routes["save"], makeHandler(saveHandler))
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
