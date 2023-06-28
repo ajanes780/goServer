@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"html/template"
 	"log"
 	"net/http"
@@ -9,6 +8,8 @@ import (
 	"regexp"
 )
 
+// https://github.com/gomarkdown/markdown
+// TODO: convert to use markdown
 type Page struct {
 	Title string
 	Body  []byte
@@ -37,14 +38,14 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 	}
 }
 
-func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
-	m := validPath.FindStringSubmatch(r.URL.Path)
-	if m == nil {
-		http.NotFound(w, r)
-		return "", errors.New("invalid Page Title")
-	}
-	return m[2], nil // The title is the second subexpression.
-}
+//func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
+//	m := validPath.FindStringSubmatch(r.URL.Path)
+//	if m == nil {
+//		http.NotFound(w, r)
+//		return "", errors.New("invalid Page Title")
+//	}
+//	return m[2], nil // The title is the second subexpression.
+//}
 
 func (p *Page) save() error {
 	filename := p.Title + ".txt"
@@ -103,9 +104,14 @@ func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
 	http.Redirect(w, r, "/view/"+title, http.StatusFound)
 }
 
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/view/FrontPage", http.StatusFound)
+}
+
 func main() {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
+	http.HandleFunc("/", homeHandler)
 	http.HandleFunc(routes["view"], makeHandler(viewHandler))
 	http.HandleFunc(routes["edit"], makeHandler(editHandler))
 	http.HandleFunc(routes["save"], makeHandler(saveHandler))
