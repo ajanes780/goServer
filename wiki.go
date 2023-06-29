@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/russross/blackfriday/v2"
 	"html/template"
 	"log"
 	"net/http"
@@ -62,9 +63,11 @@ func loadPage(title string) (*Page, error) {
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
+
 	err := templates.ExecuteTemplate(w, tmpl+".html", p)
 
 	if err != nil {
+		log.Printf("Error reading .md file: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -105,7 +108,29 @@ func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/view/FrontPage", http.StatusFound)
+
+	mdFile, err := os.ReadFile("markdown/example.md")
+
+	if err != nil {
+		log.Printf("Error reading .md file: %v", err)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	mdToHTML := blackfriday.Run(mdFile)
+	tmpl, err := template.ParseFiles("templates/view.html")
+	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(w, template.HTML(mdToHTML))
+	if err != nil {
+		log.Printf("Error executing template: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
 }
 
 func main() {

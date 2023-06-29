@@ -1,7 +1,19 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+
+img {
+    max-width: 400px;
+}
+
 h1 {
     font-size: 2em;
     font-weight: bold;
-    margin: 0;
-    padding: 0;
-    color: aqua;
+    margin-bottom: 0.5em;
+    color: blueviolet;
 }
