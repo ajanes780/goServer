@@ -10,7 +10,10 @@ import (
 )
 
 // https://github.com/gomarkdown/markdown
-// TODO: convert to use markdown
+// TODO: convert to use markdown done [x]
+// TODO : render markdown file based on page name []
+// TODO: add a home page with a list of pages []
+// TODO: add header template to view template []
 type Page struct {
 	Title string
 	Body  []byte
@@ -118,7 +121,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	mdToHTML := blackfriday.Run(mdFile)
-	tmpl, err := template.ParseFiles("templates/view.html")
+	tmpl, err := template.ParseFiles("templates/view.html", "templates/header.html")
 	if err != nil {
 		log.Printf("Error parsing template: %v", err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)
@@ -136,6 +139,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
+	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images/"))))
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc(routes["view"], makeHandler(viewHandler))
 	http.HandleFunc(routes["edit"], makeHandler(editHandler))

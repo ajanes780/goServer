@@ -12,5 +12,5 @@ console.log('Hello, World!');
 
 ```
 
-![cat pick](../static/cat.png)
+![cat pick](../images/cat.png)
 
