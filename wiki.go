@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"regexp"
+	"strings"
 )
 
 // https://github.com/gomarkdown/markdown
@@ -19,28 +19,43 @@ type Page struct {
 	Body  []byte
 }
 
+type Article struct {
+	Title     string
+	Body      []byte
+	HeroImage string
+	Summary   string
+}
+
 var routes = map[string]string{
 	"view": "/view/",
 	"edit": "/edit/",
 	"save": "/save/",
 }
 
-var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
-
-var validPath = regexp.MustCompile("^/(edit|save|view|)/([a-zA-Z0-9]+)$")
-
-func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		m := validPath.FindStringSubmatch(r.URL.Path)
-
-		if m == nil {
-			http.NotFound(w, r)
-			return
-		}
-
-		fn(w, r, m[2])
-	}
+var route = map[string]string{
+	"home":  "/",
+	"view":  "/view/",
+	"about": "/about/",
 }
+
+// var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+var tmpl = template.Must(template.ParseFiles("templates/view.html", "templates/header.html", "templates/footer.html"))
+
+//var validPath = regexp.MustCompile("^/(edit|save|view|)/([a-zA-Z0-9]+)$")
+
+//func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
+//	return func(w http.ResponseWriter, r *http.Request) {
+//		//m := validPath.FindStringSubmatch(r.URL.Path)
+//		//p := loadPage(r.URL.Path)
+//
+//		if m == nil {
+//			http.NotFound(w, r)
+//			return
+//		}
+//
+//		fn(w, r, m[2])
+//	}
+//}
 
 //func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
 //	m := validPath.FindStringSubmatch(r.URL.Path)
@@ -57,78 +72,90 @@ func (p *Page) save() error {
 }
 
 func loadPage(title string) (*Page, error) {
-	filename := title + ".txt"
+	filename := title + ".md"
 	body, err := os.ReadFile(filename)
+
 	if err != nil {
 		return nil, err
 	}
 	return &Page{Title: title, Body: body}, nil
 }
 
-func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
+//func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
+//
+//	err := templates.ExecuteTemplate(w, tmpl+".html", p)
+//
+//	if err != nil {
+//		log.Printf("Error reading .md file: %v", err)
+//		http.Error(w, err.Error(), http.StatusInternalServerError)
+//	}
+//
+//}
 
-	err := templates.ExecuteTemplate(w, tmpl+".html", p)
+//func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
+//
+//	p, err := loadPage(title)
+//
+//	if err != nil {
+//		http.Redirect(w, r, "/edit/"+title, http.StatusFound)
+//	}
+//
+//	renderTemplate(w, "view", p)
+//}
 
-	if err != nil {
-		log.Printf("Error reading .md file: %v", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+//func editHandler(w http.ResponseWriter, r *http.Request, title string) {
+//
+//	p, err := loadPage(title)
+//	if err != nil {
+//		p = &Page{Title: title}
+//	}
+//
+//	renderTemplate(w, "edit", p)
+//}
 
-}
-
-func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
-
-	p, err := loadPage(title)
-
-	if err != nil {
-		http.Redirect(w, r, "/edit/"+title, http.StatusFound)
-	}
-
-	renderTemplate(w, "view", p)
-}
-
-func editHandler(w http.ResponseWriter, r *http.Request, title string) {
-
-	p, err := loadPage(title)
-	if err != nil {
-		p = &Page{Title: title}
-	}
-
-	renderTemplate(w, "edit", p)
-}
-
-func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
-
-	body := r.FormValue("body")
-	p := &Page{Title: title, Body: []byte(body)}
-	err := p.save()
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	http.Redirect(w, r, "/view/"+title, http.StatusFound)
-}
+//func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
+//
+//	body := r.FormValue("body")
+//	p := &Page{Title: title, Body: []byte(body)}
+//	err := p.save()
+//
+//	if err != nil {
+//		http.Error(w, err.Error(), http.StatusInternalServerError)
+//		return
+//	}
+//	http.Redirect(w, r, "/view/"+title, http.StatusFound)
+//}
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 
-	mdFile, err := os.ReadFile("markdown/example.md")
+	//TODO: load page based on article/page name should also parse out the first image in the article and summary
 
+	articleName := strings.Split(r.URL.Path, "/view/")
+	if len(articleName) < 2 {
+		http.Redirect(w, r, "/view/home", http.StatusFound)
+		return
+	}
+	s := strings.Trim(articleName[1], " ")
+
+	mdFile, err := os.ReadFile("markdown/" + s + ".md")
+
+	// If the file doesn't exist, redirect to the home page
 	if err != nil {
-		log.Printf("Error reading .md file: %v", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+
+		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
 
 	mdToHTML := blackfriday.Run(mdFile)
-	tmpl, err := template.ParseFiles("templates/view.html", "templates/header.html")
+
+	err = tmpl.Execute(w, template.HTML(mdToHTML))
+
 	if err != nil {
 		log.Printf("Error parsing template: %v", err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
 
-	err = tmpl.Execute(w, template.HTML(mdToHTML))
 	if err != nil {
 		log.Printf("Error executing template: %v", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
@@ -136,14 +163,24 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func frontPageHandler(w http.ResponseWriter, r *http.Request) {
+
+	w.Write([]byte("Hello World"))
+
+}
 func main() {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images/"))))
-	http.HandleFunc("/", homeHandler)
-	http.HandleFunc(routes["view"], makeHandler(viewHandler))
-	http.HandleFunc(routes["edit"], makeHandler(editHandler))
-	http.HandleFunc(routes["save"], makeHandler(saveHandler))
+
+	http.HandleFunc("/view/", homeHandler)
+	http.HandleFunc("/", frontPageHandler)
+
+	// TODO : make admin routes for uploading articles
+	//http.HandleFunc(routes["view"], makeHandler(viewHandler))
+	//http.HandleFunc(routes["edit"], makeHandler(editHandler))
+	//http.HandleFunc(routes["save"], makeHandler(saveHandler))
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
