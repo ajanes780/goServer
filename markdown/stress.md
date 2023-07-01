@@ -21,4 +21,4 @@ P.S. laughing helps too.
 
 Why did the programmer quit his job?
 
-Because he could not handle the stress — he kept trying to Ctrl + Z his way out of every problem!
+### Because he could not handle the stress — he kept trying to Ctrl + Z his way out of every problem!

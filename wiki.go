@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/russross/blackfriday/v2"
 	"html/template"
 	"log"
@@ -14,32 +15,32 @@ import (
 // TODO : render markdown file based on page name []
 // TODO: add a home page with a list of pages []
 // TODO: add header template to view template []
+
+var view = "/view/"
+
 type Page struct {
 	Title string
 	Body  []byte
 }
 
-type Article struct {
-	Title     string
-	Body      []byte
-	HeroImage string
-	Summary   string
-}
+//var routes = map[string]string{
+//	"view": "/view/",
+//	"edit": "/edit/",
+//	"save": "/save/",
+//}
+//
+//var route = map[string]string{
+//	"home":  "/",
+//	"view":  "/view/",
+//	"about": "/about/",
+//}
 
-var routes = map[string]string{
-	"view": "/view/",
-	"edit": "/edit/",
-	"save": "/save/",
-}
-
-var route = map[string]string{
-	"home":  "/",
-	"view":  "/view/",
-	"about": "/about/",
-}
-
-// var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
-var tmpl = template.Must(template.ParseFiles("templates/view.html", "templates/header.html", "templates/footer.html"))
+var tmpl = template.Must(template.ParseFiles(
+	"templates/view.html",
+	"templates/header.html",
+	"templates/footer.html",
+	"templates/404.html",
+))
 
 //var validPath = regexp.MustCompile("^/(edit|save|view|)/([a-zA-Z0-9]+)$")
 
@@ -66,20 +67,20 @@ var tmpl = template.Must(template.ParseFiles("templates/view.html", "templates/h
 //	return m[2], nil // The title is the second subexpression.
 //}
 
-func (p *Page) save() error {
-	filename := p.Title + ".txt"
-	return os.WriteFile(filename, p.Body, 0600)
-}
+//func (p *Page) save() error {
+//	filename := p.Title + ".txt"
+//	return os.WriteFile(filename, p.Body, 0600)
+//}
 
-func loadPage(title string) (*Page, error) {
-	filename := title + ".md"
-	body, err := os.ReadFile(filename)
-
-	if err != nil {
-		return nil, err
-	}
-	return &Page{Title: title, Body: body}, nil
-}
+//func loadPage(title string) (*Page, error) {
+//	filename := title + ".md"
+//	body, err := os.ReadFile(filename)
+//
+//	if err != nil {
+//		return nil, err
+//	}
+//	return &Page{Title: title, Body: body}, nil
+//}
 
 //func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 //
@@ -126,27 +127,34 @@ func loadPage(title string) (*Page, error) {
 //	http.Redirect(w, r, "/view/"+title, http.StatusFound)
 //}
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
+func viewHandler(w http.ResponseWriter, r *http.Request) {
 
 	//TODO: load page based on article/page name should also parse out the first image in the article and summary
 
-	articleName := strings.Split(r.URL.Path, "/view/")
+	articleName := strings.Split(r.URL.Path, view)
 	if len(articleName) < 2 {
-		http.Redirect(w, r, "/view/home", http.StatusFound)
+		http.Redirect(w, r, view+"home", http.StatusFound)
 		return
 	}
-	s := strings.Trim(articleName[1], " ")
-
-	mdFile, err := os.ReadFile("markdown/" + s + ".md")
+	a := strings.Trim(articleName[1], " ")
+	mdFile, err := os.ReadFile("markdown/" + a + ".md")
 
 	// If the file doesn't exist, redirect to the home page
 	if err != nil {
-
+		// todo : add a 404 page
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
 
 	mdToHTML := blackfriday.Run(mdFile)
+
+	parseArticle(mdFile)
+
+	fmt.Println(string(&a.mdFile))
+
+	// create article type
+	// store data in article type
+	// pass article type to template
 
 	err = tmpl.Execute(w, template.HTML(mdToHTML))
 
@@ -164,16 +172,14 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func frontPageHandler(w http.ResponseWriter, r *http.Request) {
-
-	w.Write([]byte("Hello World"))
-
+	tmpl.ExecuteTemplate(w, "404.html", nil)
 }
 func main() {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images/"))))
 
-	http.HandleFunc("/view/", homeHandler)
+	http.HandleFunc(view, viewHandler)
 	http.HandleFunc("/", frontPageHandler)
 
 	// TODO : make admin routes for uploading articles
