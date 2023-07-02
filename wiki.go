@@ -23,109 +23,12 @@ type Page struct {
 	Body  []byte
 }
 
-//var routes = map[string]string{
-//	"view": "/view/",
-//	"edit": "/edit/",
-//	"save": "/save/",
-//}
-//
-//var route = map[string]string{
-//	"home":  "/",
-//	"view":  "/view/",
-//	"about": "/about/",
-//}
-
 var tmpl = template.Must(template.ParseFiles(
 	"templates/view.html",
 	"templates/header.html",
 	"templates/footer.html",
 	"templates/404.html",
 ))
-
-//var validPath = regexp.MustCompile("^/(edit|save|view|)/([a-zA-Z0-9]+)$")
-
-//func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
-//	return func(w http.ResponseWriter, r *http.Request) {
-//		//m := validPath.FindStringSubmatch(r.URL.Path)
-//		//p := loadPage(r.URL.Path)
-//
-//		if m == nil {
-//			http.NotFound(w, r)
-//			return
-//		}
-//
-//		fn(w, r, m[2])
-//	}
-//}
-
-//func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
-//	m := validPath.FindStringSubmatch(r.URL.Path)
-//	if m == nil {
-//		http.NotFound(w, r)
-//		return "", errors.New("invalid Page Title")
-//	}
-//	return m[2], nil // The title is the second subexpression.
-//}
-
-//func (p *Page) save() error {
-//	filename := p.Title + ".txt"
-//	return os.WriteFile(filename, p.Body, 0600)
-//}
-
-//func loadPage(title string) (*Page, error) {
-//	filename := title + ".md"
-//	body, err := os.ReadFile(filename)
-//
-//	if err != nil {
-//		return nil, err
-//	}
-//	return &Page{Title: title, Body: body}, nil
-//}
-
-//func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-//
-//	err := templates.ExecuteTemplate(w, tmpl+".html", p)
-//
-//	if err != nil {
-//		log.Printf("Error reading .md file: %v", err)
-//		http.Error(w, err.Error(), http.StatusInternalServerError)
-//	}
-//
-//}
-
-//func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
-//
-//	p, err := loadPage(title)
-//
-//	if err != nil {
-//		http.Redirect(w, r, "/edit/"+title, http.StatusFound)
-//	}
-//
-//	renderTemplate(w, "view", p)
-//}
-
-//func editHandler(w http.ResponseWriter, r *http.Request, title string) {
-//
-//	p, err := loadPage(title)
-//	if err != nil {
-//		p = &Page{Title: title}
-//	}
-//
-//	renderTemplate(w, "edit", p)
-//}
-
-//func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
-//
-//	body := r.FormValue("body")
-//	p := &Page{Title: title, Body: []byte(body)}
-//	err := p.save()
-//
-//	if err != nil {
-//		http.Error(w, err.Error(), http.StatusInternalServerError)
-//		return
-//	}
-//	http.Redirect(w, r, "/view/"+title, http.StatusFound)
-//}
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -148,9 +51,10 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 
 	mdToHTML := blackfriday.Run(mdFile)
 
-	parseArticle(mdFile)
+	fmt.Println(string(mdToHTML))
+	A := parseArticle(mdToHTML)
 
-	fmt.Println(string(&a.mdFile))
+	fmt.Printf("%+v", A)
 
 	// create article type
 	// store data in article type

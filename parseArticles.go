@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"golang.org/x/net/html"
 	"strings"
 )
@@ -10,7 +9,7 @@ type Article struct {
 	Title     string
 	HeroImage string
 	Summary   string
-	mdFile    []byte
+	mdFile    string
 }
 
 func getFirstChildData(n *html.Node) string {
@@ -33,67 +32,69 @@ func findElement(n *html.Node, tag string) (string, bool) {
 	if n.Type == html.ElementNode && n.Data == tag {
 		if tag == "img" {
 			return getImgSrc(n), true
+		} else if tag == "p" {
+			for c := n.FirstChild; c != nil; c = c.NextSibling {
+				if c.Data == "img" {
+					return getImgSrc(c), true
+				}
+			}
 		}
 		return getFirstChildData(n), true
 	}
 	return "", false
 }
 
-func FindFirstElement(data []byte, tag string) (string, error) {
+func FindNthElement(data []byte, tag string, n int) (string, error) {
 	r := strings.NewReader(string(data))
 	doc, err := html.Parse(r)
+
 	if err != nil {
 		return "", err
 	}
+	count := 0
+
 	var f func(*html.Node) (string, bool)
-	f = func(n *html.Node) (string, bool) {
-		result, found := findElement(n, tag)
+
+	f = func(node *html.Node) (string, bool) {
+		result, found := findElement(node, tag)
+
 		if found {
-			return result, found
+			count++
+			if count == n {
+				return result, found
+			}
 		}
-		for c := n.FirstChild; c != nil; c = c.NextSibling {
+
+		for c := node.FirstChild; c != nil; c = c.NextSibling {
 			if result, ok := f(c); ok {
 				return result, ok
 			}
 		}
+
 		return "", false
 	}
+
 	result, _ := f(doc)
 	return result, nil
 }
 
 func parseArticle(htmlData []byte) *Article {
-	//htmlData := []byte(`<html><body><h1>Hello, world!</h1><h2>Some words on the subject</h2><img src="https://example.com/image.jpg" alt="An example image"><p>This is an example.</p></body></html>`)
 
-	tags := []string{"h2", "h3", "h4", "h5", "h6", "p"}
-
-	title, err := FindFirstElement(htmlData, "h1")
+	title, err := FindNthElement(htmlData, "h1", 1)
 	if err != nil {
 		panic(err)
 	}
-	hero, err := FindFirstElement(htmlData, "img")
-	summary := ""
+	hero, err := FindNthElement(htmlData, "img", 1)
+	summary, err := FindNthElement(htmlData, "p", 2)
 
-	for _, tag := range tags {
-		result, err := FindFirstElement(htmlData, tag)
-
-		if err != nil {
-			panic(err)
-		}
-
-		if result != "" {
-			summary += fmt.Sprintf("%s ", result)
-		}
-
-	}
-	summary = strings.TrimSpace(summary)
+	s := string(htmlData)
 
 	a := Article{
 		Title:     title,
 		Summary:   summary,
 		HeroImage: hero,
-		mdFile:    htmlData,
+		mdFile:    s,
 	}
-
+	// return a pointer to the article
 	return &a
 }
