@@ -9,7 +9,10 @@ type Article struct {
 	Title     string
 	HeroImage string
 	Summary   string
-	mdFile    string
+	Author    string
+	WrittenOn string
+	Draft     bool
+	MdFile    string
 }
 
 func getFirstChildData(n *html.Node) string {
@@ -87,13 +90,24 @@ func parseArticle(htmlData []byte) *Article {
 	hero, err := FindNthElement(htmlData, "img", 1)
 	summary, err := FindNthElement(htmlData, "p", 2)
 
+	author, err := FindNthElement(htmlData, "h4", 2)
+	// remove the words "Written by: " from the author string
+	author = strings.Replace(author, "Written by: ", "", 1)
+
+	writtenOn, err := FindNthElement(htmlData, "h4", 1)
+	// remove the words "Written on: " from the writtenOn string
+	writtenOn = strings.Replace(writtenOn, "Written on: ", "", 1)
+
 	s := string(htmlData)
 
 	a := Article{
 		Title:     title,
 		Summary:   summary,
 		HeroImage: hero,
-		mdFile:    s,
+		Author:    author,
+		WrittenOn: writtenOn,
+		Draft:     false,
+		MdFile:    s,
 	}
 	// return a pointer to the article
 	return &a
