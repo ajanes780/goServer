@@ -16,4 +16,13 @@
       padding: 0;
     }
   }
+
+  code{
+    box-shadow: 0 0 0 0.2em #f8f3f3;
+    background-color: #f8f3f3;
+    padding: 0.2em;
+    border-radius: 0.2em;
+    max-width: 900px;
+    line-height: 2em;
+  }
 }
