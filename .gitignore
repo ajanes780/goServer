@@ -2,7 +2,7 @@
 
 # ignore build and binary files
 
-idea/
+idea
 build/
 tmp/
 bin/
