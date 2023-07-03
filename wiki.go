@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -23,7 +24,27 @@ type Page struct {
 	Body  []byte
 }
 
-var tmpl = template.Must(template.ParseFiles(
+func removePunctuation(s string) string {
+	// Replace white space with hyphen
+	s = strings.ReplaceAll(s, " ", "-")
+
+	reg := regexp.MustCompile(`[^\w\s-]+`)
+	s = reg.ReplaceAllString(s, "")
+
+	// Replace multiple hyphens with a single hyphen
+	regDoubleHyphen := regexp.MustCompile(`-{2,}`)
+	s = regDoubleHyphen.ReplaceAllString(s, "-")
+
+	// Convert to lowercase for standardization
+	s = strings.ToLower(s)
+
+	return s
+}
+
+var funcMap = template.FuncMap{
+	"removePunctuation": removePunctuation,
+}
+var tmpl = template.Must(template.New("").Funcs(funcMap).ParseFiles(
 	"templates/view.html",
 	"templates/header.html",
 	"templates/footer.html",
@@ -36,6 +57,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	//TODO: load page based on article/page name should also parse out the first image in the article and summary
 
 	articleName := strings.Split(r.URL.Path, view)
+	fmt.Println(articleName)
 	if len(articleName) < 2 {
 		http.Redirect(w, r, view+"home", http.StatusFound)
 		return
@@ -46,7 +68,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If the file doesn't exist, redirect to the home page
 	if err != nil {
-		// Todo : add a 404 page
+		// TODO : add a 404 page
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
@@ -54,9 +76,9 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	mdToHTML := blackfriday.Run(mdFile)
 
 	fmt.Println(string(mdToHTML))
-	A := parseArticle(mdToHTML)
+	//A := parseArticle(mdToHTML)
 
-	fmt.Printf("%+v", A)
+	//fmt.Printf("%+v", A)
 
 	// create article type
 	// store data in article type

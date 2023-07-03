@@ -1,4 +1,4 @@
-# Software Architecture — Inversion of Control Part 2
+# Software Architecture - Inversion of Control Part 2
 ## Unleash the Power of Decoupled Design: The Essential Guide to the Service Locator Pattern for Software Developers
 ![hero image ](/images/inversion-of-control-part2.png)
 

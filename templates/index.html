@@ -10,9 +10,11 @@
 <div class="article">
     <h1>List of things</h1>
     {{range .}}
-    <a href="/view/{{.Title}}"><h2>{{.Title}}</h2></a>
-    <p>{{.WrittenOn}}</p>
+    <a href="/view/{{removePunctuation .Title}}"><h2>{{.Title}}</h2></a>
+
     <p>{{.Summary}}</p>
+    <p> {{.Author}}</p>
+    <p> {{.WrittenOn}}</p>
     {{end}}
 </div>
 <!--Footer -->
