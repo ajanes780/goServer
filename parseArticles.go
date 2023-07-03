@@ -81,7 +81,7 @@ func FindNthElement(data []byte, tag string, n int) (string, error) {
 	return result, nil
 }
 
-func parseArticle(htmlData []byte) *Article {
+func parseArticle(htmlData []byte) Article {
 
 	title, err := FindNthElement(htmlData, "h1", 1)
 	if err != nil {
@@ -110,5 +110,5 @@ func parseArticle(htmlData []byte) *Article {
 		MdFile:    s,
 	}
 	// return a pointer to the article
-	return &a
+	return a
 }

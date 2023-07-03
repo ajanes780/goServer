@@ -40,11 +40,12 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	a := strings.Trim(articleName[1], " ")
+
 	mdFile, err := os.ReadFile("markdown/" + a + ".md")
 
 	// If the file doesn't exist, redirect to the home page
 	if err != nil {
-		// todo : add a 404 page
+		// Todo : add a 404 page
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
@@ -76,8 +77,41 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func frontPageHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl.ExecuteTemplate(w, "404.html", nil)
+
+	// read all files in markdown directory create array of values
+	files, err := os.ReadDir(`markdown/`)
+
+	if err != nil {
+		fmt.Println("error reading directory", err)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	var x []Article
+	for _, file := range files {
+
+		mdFile, err := os.ReadFile("markdown/" + file.Name())
+		if err != nil {
+			fmt.Println("error reading file", err)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+
+		mdToHTML := blackfriday.Run(mdFile)
+		a := parseArticle(mdToHTML)
+		x = append(x, a)
+
+	}
+	fmt.Println("!!!!:x", x[2].Title)
+
+	tmpl.ExecuteTemplate(w, "index.html", nil)
+
+	//if err != nil {
+	//	http.Error(w, "internal server error", http.StatusInternalServerError)
+	//	return
+	//}
 }
+
 func main() {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
