@@ -1,9 +1,9 @@
-.idea
+.idea/
 
 # ignore build and binary files
 
 build/
-temp
+tmp/
 bin/
 
 # Unignore all with extensions
