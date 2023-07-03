@@ -7,6 +7,14 @@
 <body>
 <!-- Header -->
 <!--  List of recent articles 5 ? -->
+<div class="article">
+    <h1>List of things</h1>
+    {{range .}}
+    <a href="/view/{{.Title}}"><h2>{{.Title}}</h2></a>
+    <p>{{.WrittenOn}}</p>
+    <p>{{.Summary}}</p>
+    {{end}}
+</div>
 <!--Footer -->
 </body>
 </html>

@@ -28,6 +28,7 @@ var tmpl = template.Must(template.ParseFiles(
 	"templates/header.html",
 	"templates/footer.html",
 	"templates/404.html",
+	"templates/index.html",
 ))
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
@@ -87,7 +88,7 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var x []Article
+	var listOfMostRecentArticles []Article
 	for _, file := range files {
 
 		mdFile, err := os.ReadFile("markdown/" + file.Name())
@@ -98,13 +99,13 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		mdToHTML := blackfriday.Run(mdFile)
-		a := parseArticle(mdToHTML)
-		x = append(x, a)
+		parsedArticle := parseArticle(mdToHTML)
+		listOfMostRecentArticles = append(listOfMostRecentArticles, parsedArticle)
 
 	}
-	fmt.Println("!!!!:x", x[2].Title)
+	//fmt.Println("!!!!:x", listOfMostRecentArticles [2].Title)
 
-	tmpl.ExecuteTemplate(w, "index.html", nil)
+	tmpl.ExecuteTemplate(w, "index.html", listOfMostRecentArticles)
 
 	//if err != nil {
 	//	http.Error(w, "internal server error", http.StatusInternalServerError)
