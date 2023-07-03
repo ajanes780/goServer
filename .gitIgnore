@@ -3,8 +3,8 @@
 # ignore build and binary files
 
 build/
+temp
+bin/
 
-
-
-
-
+# Unignore all with extensions
+!*.*
