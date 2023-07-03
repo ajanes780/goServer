@@ -1,5 +1,4 @@
-module goWiki
-
+module goServer
 go 1.20
 
 require (
