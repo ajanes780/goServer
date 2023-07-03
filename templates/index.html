@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Really fancy title </title>
-</head>
+
+
+{{template "header.html"}}
 <body>
 <!-- Header -->
 <!--  List of recent articles 5 ? -->
-<div class="article">
-    <h1>List of things</h1>
-    {{range .}}
-    <a href="/view/{{removePunctuation .Title}}"><h2>{{.Title}}</h2></a>
+<div class="articles">
 
-    <p>{{.Summary}}</p>
-    <p> {{.Author}}</p>
-    <p> {{.WrittenOn}}</p>
+    {{range .}}
+    <div class="article">
+
+        <a href="/view/{{removePunctuation .Title}}"><h2>{{.Title}}</h2></a>
+
+        <p><img src="{{.HeroImage}}" alt="image"/></p>
+        <p>{{.Summary}}</p>
+        <p> {{.Author}}</p>
+        <p> {{.WrittenOn}}</p>
+    </div>
     {{end}}
 </div>
 <!--Footer -->

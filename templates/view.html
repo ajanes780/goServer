@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-      <link rel="stylesheet" href="/static/index.css">
-   <title>Markdown Viewer</title>
-</head>
+{{template "header.html"}}
 <body>
 <div class="body1">
-<header>{{template "header.html"}}</header>
-
-{{.}}
+    {{.}}
 
     <footer>{{template "footer.html"}}</footer>
 </div>

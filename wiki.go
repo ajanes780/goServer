@@ -62,6 +62,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, view+"home", http.StatusFound)
 		return
 	}
+
 	a := strings.Trim(articleName[1], " ")
 
 	mdFile, err := os.ReadFile("markdown/" + a + ".md")
@@ -75,16 +76,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 
 	mdToHTML := blackfriday.Run(mdFile)
 
-	fmt.Println(string(mdToHTML))
-	//A := parseArticle(mdToHTML)
-
-	//fmt.Printf("%+v", A)
-
-	// create article type
-	// store data in article type
-	// pass article type to template
-
-	err = tmpl.Execute(w, template.HTML(mdToHTML))
+	err = tmpl.ExecuteTemplate(w, "view.html", template.HTML(mdToHTML))
 
 	if err != nil {
 		log.Printf("Error parsing template: %v", err)
@@ -125,14 +117,9 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 		listOfMostRecentArticles = append(listOfMostRecentArticles, parsedArticle)
 
 	}
-	//fmt.Println("!!!!:x", listOfMostRecentArticles [2].Title)
 
 	tmpl.ExecuteTemplate(w, "index.html", listOfMostRecentArticles)
 
-	//if err != nil {
-	//	http.Error(w, "internal server error", http.StatusInternalServerError)
-	//	return
-	//}
 }
 
 func main() {
