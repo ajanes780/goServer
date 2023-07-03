@@ -22,5 +22,5 @@ Our habits play a significant role in defining who we are as individuals. While 
 Begin by creating one positive habit that aligns with the person you want to become.
 Doing so can create a fulfilling, successful life that reflects your true self.
 
-#### Published: 2021-10-7 
-#### Author: Aaron Janes
+#### Written on: 2021-10-7 
+#### Written by: Aaron Janes

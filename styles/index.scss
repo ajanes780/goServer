@@ -33,10 +33,6 @@ p {
   margin-bottom: 0.5em;
 }
 
-a {
-  color: #000;
-  font-weight: bold;
-}
 
 .header {
   width: 100%;
@@ -64,13 +60,58 @@ ul {
 
 
 .articles {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 20px;
+  padding: 20px;
+
+  @media (min-width: 600px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .article {
-    .read-more-links{
-      color: #b90c0c;
-        font-weight: bold;
+    background-color: #f8f6f6;
+    border-radius: 5px;
+    padding: 20px;
+
+    a {
+      text-decoration: none;
+      color: black;
+
+      h2 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+        text-align: left;
+
+
+      }
+    }
+
+    .subtext {
+      font-size: .8em;
+      color: #2c2c2c;
+
+    }
+
+    p {
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    .read-more-links {
+      color: blue;
+      text-decoration: none;
     }
   }
 }
+
 
 footer {
   width: 100%;

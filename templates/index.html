@@ -8,14 +8,14 @@
 <div class="articles">
     {{range .}}
     <div class="article">
+        <p class="subtext"> Published: {{.WrittenOn}}</p>
         <a href="/view/{{removePunctuation .Title}}"><h2>{{.Title}}</h2></a>
-        <p><img src="{{.HeroImage}}" alt="image"/></p>
+        <a href="/view/{{removePunctuation .Title}}"> <img src="{{.HeroImage}}" alt="image"/></a>
         <p>{{.Summary}} [<a class="read-more-links" href="/view/{{removePunctuation .Title}}">Read More</a>]</p>
-        <p> {{.Author}}</p>
-        <p> {{.WrittenOn}}</p>
+        <p class="subtext"> Written by: {{.Author}}</p>
     </div>
     {{end}}
 </div>
-<!--Footer -->
+<!--Email subscription -->
 </body>
 </html>
