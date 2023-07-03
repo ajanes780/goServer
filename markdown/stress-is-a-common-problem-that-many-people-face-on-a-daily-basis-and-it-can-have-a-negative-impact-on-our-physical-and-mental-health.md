@@ -24,5 +24,5 @@ Why did the programmer quit his job?
 ### Because he could not handle the stress — he kept trying to Ctrl + Z his way out of every problem!
 
 
-#### Written on: 2021-10-10 08:00:00
-#### Written by: "Evan O'Keeffe"
+#### Written on: 2021-10-9 
+#### Written by: Aaron Janes

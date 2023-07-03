@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-
+<html lang="en">
 
 {{template "header.html"}}
 <body>
@@ -9,11 +9,9 @@
 
     {{range .}}
     <div class="article">
-
         <a href="/view/{{removePunctuation .Title}}"><h2>{{.Title}}</h2></a>
-
         <p><img src="{{.HeroImage}}" alt="image"/></p>
-        <p>{{.Summary}}</p>
+        <p>{{.Summary}} [<a class="read-more-links" href="/view/{{removePunctuation .Title}}">Read More</a>]</p>
         <p> {{.Author}}</p>
         <p> {{.WrittenOn}}</p>
     </div>

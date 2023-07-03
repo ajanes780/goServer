@@ -73,5 +73,5 @@ Thank you for taking the time to read this article on the Service Locator design
 
 
 
-#### Written on: 2021-10-10 08:00:00
-#### Written by: "Evan O'Keeffe"
+#### Written on: 2021-10-10
+#### Written by: Aaron Janes

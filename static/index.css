@@ -75,3 +75,7 @@ footer {
     justify-content: space-between;
     align-items: center;
 }
+
+.read-more-links{
+    color: blueviolet;
+}
