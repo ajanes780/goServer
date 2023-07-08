@@ -1,11 +1,13 @@
 
 
 # ignore build and binary files
+.idea
+.idea/
 
-.idea/**/*
 build/
 tmp/
 bin/
 static/**/*
+styles/**/*
 # Unignore all with extensions
 !*.*
