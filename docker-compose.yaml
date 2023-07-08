@@ -1,0 +1,10 @@
+version: "3.8" # version of the Docker Compose spec which is being used
+services: # "Services" are in the end the Containers that your app needs
+  web:
+    build:
+        context: ./backend
+        dockerfile: Dockerfile-webserver
+    volumes: # Define any required volumes / bind mounts
+      - ./backend/:/app/
+    ports:
+      - "8080:8080"
