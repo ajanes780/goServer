@@ -55,6 +55,10 @@ ul {
     list-style: none;
     margin: 1em;
     padding: 0;
+
+    a {
+      text-decoration: none;
+    }
   }
 }
 
@@ -73,6 +77,11 @@ ul {
     background-color: #f8f6f6;
     border-radius: 5px;
     padding: 20px;
+
+    &:hover {
+      box-shadow: 0 0 0 0.2em #e1dbdb;
+      background-color: #e1dbdb;
+    }
 
     a {
       text-decoration: none;

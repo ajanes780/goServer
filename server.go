@@ -63,7 +63,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	// If the file doesn't exist, redirect to the home page
 	if err != nil {
 		//TODO : add a 404 page
-		http.Redirect(w, r, "/", http.StatusFound)
+		http.Redirect(w, r, "/home", http.StatusFound)
 		return
 	}
 
@@ -115,14 +115,17 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func catchAllHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl.ExecuteTemplate(w, "404.html", nil)
+}
 func main() {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images/"))))
 
 	http.HandleFunc(view, viewHandler)
-	http.HandleFunc("/", frontPageHandler)
-
+	http.HandleFunc("/home", frontPageHandler)
+	http.HandleFunc("/", catchAllHandler)
 	// TODO : make admin routes for uploading articles
 	//http.HandleFunc(routes["view"], makeHandler(viewHandler))
 	//http.HandleFunc(routes["edit"], makeHandler(editHandler))
