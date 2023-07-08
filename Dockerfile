@@ -2,7 +2,6 @@ FROM ubuntu:18.04
 MAINTAINER  Aaron Janes
 WORKDIR /app
 
-
 RUN apt-get -y update && apt-get -y upgrade && apt-get install -y \
     build-essential \
     curl \
