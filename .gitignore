@@ -8,6 +8,5 @@ build/
 tmp/
 bin/
 static/css/
-styles
 # Unignore all with extensions
 !*.*
