@@ -7,7 +7,7 @@
 build/
 tmp/
 bin/
-static/**/*
-styles/**/*
+static/css/
+styles
 # Unignore all with extensions
 !*.*
