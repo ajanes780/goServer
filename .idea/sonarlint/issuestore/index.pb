@@ -1,0 +1,49 @@
+
+:
+
+.gitIgnore,a/5/a5b5bb8eb2cc429578273e28a0238787a8f404a4
+B
+templates/404.html,6/8/68a8bfc84a821a32ae5ba7dad3051cb12d1529b3
+9
+	view.html,d/0/d0ee1ab1c967b324d08298bf6aa659408856293a
+:
+
+.gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
+C
+templates/hero.html,7/8/78b2511e778b67fc3e52edb6c9e5b40c6fa32f16
+@
+parseArticles.go,b/b/bb2d306072fc40f83744824c5f6e0c319d959977
+H
+static/css/index.css.map,c/b/cb46f41545cf248cf38e3f886e469763205f2990
+@
+styles/index.css,f/b/fb7f0b3ad4eb1b196be9ae9692e6835a12d7028d
+D
+styles/index.css.map,3/b/3b04d23a0a3eab88aab747efd8af5d5307bcab40
+6
+go.sum,5/a/5aa1ac64de2b0c4821af9393b44965020e4a521d
+6
+go.mod,c/4/c47645c391ad0571c40779079363c9d48412e18b
+9
+	.air.toml,7/8/7842b6ba41dde57be221f2a235981b7d34e86a17
+D
+static/css/index.css,2/8/28a35ba2769794f2a93b458d40b02b5595e68419
+E
+templates/header.html,5/6/560469858265bdf005e9583342d090c4df443c5f
+9
+	ReadMe.md,a/2/a225a7e79496c5a1d847c78c3db651eb302ec867
+C
+templates/view.html,4/d/4de67e38bfd42ffabfe3bdb4b48513fa010f0073
+Â
+‘markdown/stress-is-a-common-problem-that-many-people-face-on-a-daily-basis-and-it-can-have-a-negative-impact-on-our-physical-and-mental-health.md,6/0/6064ae77a680a0d6f58f3883aef2423d79cc6a8b
+m
+=markdown/software-architecture-inversion-of-control-part-2.md,1/a/1adb296ad8946835d118648844bf9dbd7350906a
+8
+makefile,0/c/0c0610d12d971107a85160c6a927e94a1062a01a
+q
+Amarkdown/you-might-not-like-it-but-your-habits-will-define-you.md,f/6/f67f87af7e1a1c650b1b407bbc73e02234a67e37
+‘
+amarkdown/lets-encrypt-ssl-in-just-3-lines-of-code-a-step-by-step-guide-with-nginx-on-linux-ami.md,d/c/dcde978592d4cab9e7b457e07ede18d1ce93df93
+D
+templates/index.html,f/6/f69b8ce2e31684ae06f1b3e84821e07e3dfddb2f
+9
+	edit.html,c/9/c95af1e59aa21e82d90b9f3f24040b8c9916dbcf

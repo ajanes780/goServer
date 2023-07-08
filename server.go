@@ -11,18 +11,13 @@ import (
 	"strings"
 )
 
-// https://github.com/gomarkdown/markdown
-// TODO: convert to use markdown done [x]
-// TODO : render markdown file based on page name []
-// TODO: add a home page with a list of pages []
-// TODO: add header template to view template []
-
+// TODO: page caching via redis []
+// TODO: save articles to database []
+// TODO: add admin page for uploading articles []
+// TODO: login system cognito? []
+// TODO: Dockerize app []
+// TODO: Deploy to AWS container []
 var view = "/view/"
-
-type Page struct {
-	Title string
-	Body  []byte
-}
 
 func removePunctuation(s string) string {
 	// Replace white space with hyphen
@@ -54,8 +49,6 @@ var tmpl = template.Must(template.New("").Funcs(funcMap).ParseFiles(
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 
-	//TODO: load page based on article/page name should also parse out the first image in the article and summary
-
 	articleName := strings.Split(r.URL.Path, view)
 	fmt.Println(articleName)
 	if len(articleName) < 2 {
@@ -69,7 +62,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If the file doesn't exist, redirect to the home page
 	if err != nil {
-		// TODO : add a 404 page
+		//TODO : add a 404 page
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
@@ -80,7 +73,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Error parsing template: %v", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 

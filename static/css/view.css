@@ -1,0 +1,25 @@
+.view h1 {
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+.view ul {
+  display: flex;
+  flex-direction: column;
+}
+.view ul li {
+  list-style: disc;
+  margin: 1em;
+  padding: 0;
+}
+.view code {
+  box-shadow: 0 0 0 0.2em #f8f3f3;
+  background-color: #f8f3f3;
+  padding: 0.5em;
+  border-radius: 0.2em;
+  max-width: 900px;
+  line-height: 3em;
+}
+
+/*# sourceMappingURL=view.css.map */
