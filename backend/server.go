@@ -85,7 +85,6 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func frontPageHandler(w http.ResponseWriter, r *http.Request) {
-
 	// read all files in markdown directory create array of values
 	files, err := os.ReadDir(`markdown/`)
 
@@ -115,7 +114,7 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	tmpl.ExecuteTemplate(w, "index.html", listOfMostRecentArticles)
+	// return json of all articles
 
 }
 
