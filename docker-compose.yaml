@@ -8,3 +8,11 @@ services: # "Services" are in the end the Containers that your app needs
       - ./backend/:/app/
     ports:
       - "8080:8080"
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "8001:5432"
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: Admin

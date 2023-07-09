@@ -96,6 +96,7 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var listOfMostRecentArticles []Article
+
 	for _, file := range files {
 
 		mdFile, err := os.ReadFile("markdown/" + file.Name())
@@ -106,8 +107,10 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		mdToHTML := blackfriday.Run(mdFile)
-		parsedArticle := parseArticle(mdToHTML)
-		listOfMostRecentArticles = append(listOfMostRecentArticles, parsedArticle)
+		_ = parseArticle(mdToHTML)
+
+		result := GetAllArticles()
+		listOfMostRecentArticles = append(listOfMostRecentArticles, result...)
 
 	}
 
@@ -119,7 +122,7 @@ func catchAllHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "404.html", nil)
 }
 func main() {
-
+	InitDB()
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images/"))))
 

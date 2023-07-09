@@ -5,16 +5,6 @@ import (
 	"strings"
 )
 
-type Article struct {
-	Title     string
-	HeroImage string
-	Summary   string
-	Author    string
-	WrittenOn string
-	Draft     bool
-	MdFile    string
-}
-
 func getFirstChildData(n *html.Node) string {
 	if n.FirstChild != nil {
 		return n.FirstChild.Data
@@ -81,13 +71,21 @@ func FindNthElement(data []byte, tag string, n int) (string, error) {
 	return result, nil
 }
 
+func uploadImageToS3(p string) string {
+	return ""
+
+}
+
 func parseArticle(htmlData []byte) Article {
 
 	title, err := FindNthElement(htmlData, "h1", 1)
 	if err != nil {
 		panic(err)
 	}
-	hero, err := FindNthElement(htmlData, "img", 1)
+	imageString, err := FindNthElement(htmlData, "img", 1)
+
+	//hero := uploadImageToS3(imageString)
+	hero := imageString
 	summary, err := FindNthElement(htmlData, "p", 2)
 
 	author, err := FindNthElement(htmlData, "h4", 2)
@@ -107,8 +105,9 @@ func parseArticle(htmlData []byte) Article {
 		Author:    author,
 		WrittenOn: writtenOn,
 		Draft:     false,
-		MdFile:    s,
+		Content:   s,
 	}
 	// return a pointer to the article
+	CreateArticle(a)
 	return a
 }
