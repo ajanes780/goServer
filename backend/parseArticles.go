@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"golang.org/x/net/html"
 	"strings"
 )
@@ -88,13 +89,27 @@ func parseArticle(htmlData []byte) Article {
 	hero := imageString
 	summary, err := FindNthElement(htmlData, "p", 2)
 
-	author, err := FindNthElement(htmlData, "h4", 2)
+	authorName, err := FindNthElement(htmlData, "h4", 2)
 	// remove the words "Written by: " from the author string
-	author = strings.Replace(author, "Written by: ", "", 1)
+	authorName = strings.Replace(authorName, "Written by: ", "", 1)
 
 	writtenOn, err := FindNthElement(htmlData, "h4", 1)
 	// remove the words "Written on: " from the writtenOn string
 	writtenOn = strings.Replace(writtenOn, "Written on: ", "", 1)
+
+	// look up the author by name
+	var author Author
+	result := DB.Where("name = ?", authorName).First(&author)
+
+	if result.Error != nil {
+		fmt.Println("Author not found, creating new author")
+		author = Author{Name: authorName}
+		result = DB.Create(&author)
+		if result.Error != nil {
+			fmt.Printf("Failed to create new author: %v\n", result.Error)
+		}
+
+	}
 
 	s := string(htmlData)
 

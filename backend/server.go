@@ -95,7 +95,7 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var listOfMostRecentArticles []Article
+	var listOfMostRecentArticles []ArticleWithAuthorName
 
 	for _, file := range files {
 
@@ -110,7 +110,8 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 		_ = parseArticle(mdToHTML)
 
 		result := GetAllArticles()
-		listOfMostRecentArticles = append(listOfMostRecentArticles, result...)
+		listOfMostRecentArticles = result
+		fmt.Printf("length of : %v \n", len(listOfMostRecentArticles))
 
 	}
 
