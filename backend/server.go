@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/russross/blackfriday/v2"
 	"html/template"
@@ -121,6 +122,27 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 func catchAllHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "404.html", nil)
 }
+
+func getAllArticlesHandler(w http.ResponseWriter, r *http.Request) {
+	result := GetAllArticles()
+
+	//return json of all articles
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	// Set this to the methods you want to allow (e.g. "GET, POST, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
+
+	// Set this to the headers you want to allow, e.g. "Authorization, Content-Type"
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	err := json.NewEncoder(w).Encode(result)
+	if err != nil {
+		fmt.Println("error encoding json", err)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+}
+
 func main() {
 	InitDB()
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
@@ -129,6 +151,7 @@ func main() {
 	http.HandleFunc(view, viewHandler)
 	http.HandleFunc("/home", frontPageHandler)
 	http.HandleFunc("/", catchAllHandler)
+	http.HandleFunc("/api/articles", getAllArticlesHandler)
 	// TODO : make admin routes for uploading articles
 	//http.HandleFunc(routes["view"], makeHandler(viewHandler))
 	//http.HandleFunc(routes["edit"], makeHandler(editHandler))
