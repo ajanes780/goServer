@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/russross/blackfriday/v2"
 	"golang.org/x/net/html"
+	"os"
 	"strings"
 )
 
@@ -125,4 +127,25 @@ func parseArticle(htmlData []byte) Article {
 	// return a pointer to the article
 	CreateArticle(a)
 	return a
+}
+
+func createBlogPosts() []os.DirEntry {
+	files, err := os.ReadDir(`markdown/`)
+	if err != nil {
+		fmt.Println("error reading directory", err)
+		os.Exit(1)
+	}
+
+	for _, file := range files {
+
+		mdFile, err := os.ReadFile("markdown/" + file.Name())
+		if err != nil {
+			fmt.Println("error reading file", err)
+			os.Exit(1)
+		}
+		mdToHTML := blackfriday.Run(mdFile)
+		_ = parseArticle(mdToHTML)
+	}
+
+	return files
 }

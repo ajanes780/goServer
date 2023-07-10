@@ -85,39 +85,39 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func frontPageHandler(w http.ResponseWriter, r *http.Request) {
-	// read all files in markdown directory create array of values
-	files, err := os.ReadDir(`markdown/`)
-
-	if err != nil {
-		fmt.Println("error reading directory", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
-		return
-	}
-
-	var listOfMostRecentArticles []ArticleWithAuthorName
-
-	for _, file := range files {
-
-		mdFile, err := os.ReadFile("markdown/" + file.Name())
-		if err != nil {
-			fmt.Println("error reading file", err)
-			http.Error(w, "internal server error", http.StatusInternalServerError)
-			return
-		}
-
-		mdToHTML := blackfriday.Run(mdFile)
-		_ = parseArticle(mdToHTML)
-
-		result := GetAllArticles()
-		listOfMostRecentArticles = result
-		fmt.Printf("length of : %v \n", len(listOfMostRecentArticles))
-
-	}
-
-	// return json of all articles
-
-}
+//func frontPageHandler(w http.ResponseWriter, r *http.Request) {
+//	// read all files in markdown directory create array of values
+//	files, err := os.ReadDir(`markdown/`)
+//
+//	if err != nil {
+//		fmt.Println("error reading directory", err)
+//		http.Error(w, "internal server error", http.StatusInternalServerError)
+//		return
+//	}
+//
+//	var listOfMostRecentArticles []ArticleWithAuthorName
+//
+//	for _, file := range files {
+//
+//		mdFile, err := os.ReadFile("markdown/" + file.Name())
+//		if err != nil {
+//			fmt.Println("error reading file", err)
+//			http.Error(w, "internal server error", http.StatusInternalServerError)
+//			return
+//		}
+//
+//		mdToHTML := blackfriday.Run(mdFile)
+//		_ = parseArticle(mdToHTML)
+//
+//		result := GetAllArticles()
+//		listOfMostRecentArticles = result
+//		fmt.Printf("length of : %v \n", len(listOfMostRecentArticles))
+//
+//	}
+//
+//	// return json of all articles
+//
+//}
 
 func catchAllHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "404.html", nil)
@@ -145,12 +145,14 @@ func getAllArticlesHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	InitDB()
+	createBlogPosts()
+
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images/"))))
 
 	http.HandleFunc(view, viewHandler)
-	http.HandleFunc("/home", frontPageHandler)
-	http.HandleFunc("/", catchAllHandler)
+	//http.HandleFunc("/home", frontPageHandler)
+	//http.HandleFunc("/", catchAllHandler)
 	http.HandleFunc("/api/articles", getAllArticlesHandler)
 	// TODO : make admin routes for uploading articles
 	//http.HandleFunc(routes["view"], makeHandler(viewHandler))
