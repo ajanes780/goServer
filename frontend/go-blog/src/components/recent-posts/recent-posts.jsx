@@ -24,7 +24,7 @@ export const RecentPosts =  () => {
 
 
   return (
-      <SimpleGrid columns={2} spacing={10} mt={10}>
+      <SimpleGrid columns={2} spacing={10} mt={10} justifyContent='center'>
 
         {articles.length  ? articles.map((article) => {
           return (

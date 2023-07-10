@@ -6,7 +6,7 @@ import {RecentPosts} from "./components/recent-posts/recent-posts.jsx";
 function App() {
 
   return (
-      <Container maxW="container.xl">
+      <Container maxW="container.xl" justifyContent='center' alignItems='center'>
         <Header/>
         <RecentPosts/>
       </Container>)
