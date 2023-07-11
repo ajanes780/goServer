@@ -78,14 +78,23 @@ func CreateArticle(a Article) {
 	}
 }
 
-func GetArticle(title string) Article {
-	var article Article
-	result := DB.Where("title = ?", title).First(&article)
+func GetArticleById(id string) (ArticleWithAuthorName, error) {
+	var articleWithAuthorName ArticleWithAuthorName
+
+	result := DB.Model(&Article{}).
+		Select("articles.*, authors.name as author_name").
+		Joins("left join authors on authors.id = articles.author_id").
+		Where("articles.id = ?", id).
+		Find(&articleWithAuthorName)
+
 	if result.Error != nil {
-		fmt.Printf("Failed to get article: %v\n", result.Error)
+		fmt.Printf("Can not find article with id: %s \n Error:  %v\n", id, result.Error)
+
+		// return and err
+		return articleWithAuthorName, result.Error
 
 	}
-	return article
+	return articleWithAuthorName, nil
 }
 
 func GetAllArticles() []ArticleWithAuthorName {

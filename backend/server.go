@@ -143,6 +143,27 @@ func getAllArticlesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func getArticle(w http.ResponseWriter, r *http.Request) {
+
+	id := strings.TrimPrefix(r.URL.Path, "/api/article/")
+
+	result, err := GetArticleById(id)
+
+	if err != nil {
+		fmt.Println("error getting article", err)
+		http.Error(w, "Can not find article with the id", http.StatusNotFound)
+		return
+	} else {
+		err = json.NewEncoder(w).Encode(result)
+
+		if err != nil {
+			fmt.Println("error encoding json", err)
+			http.Error(w, "Intenal server error", http.StatusInternalServerError)
+		}
+	}
+
+}
+
 func main() {
 	InitDB()
 	createBlogPosts()
@@ -154,6 +175,7 @@ func main() {
 	//http.HandleFunc("/home", frontPageHandler)
 	//http.HandleFunc("/", catchAllHandler)
 	http.HandleFunc("/api/articles", getAllArticlesHandler)
+	http.HandleFunc("/api/article/", getArticle)
 	// TODO : make admin routes for uploading articles
 	//http.HandleFunc(routes["view"], makeHandler(viewHandler))
 	//http.HandleFunc(routes["edit"], makeHandler(editHandler))
