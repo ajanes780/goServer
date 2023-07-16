@@ -9,16 +9,19 @@ import {
   Image,
   Link,
   Stack,
-  Text
+  Text,
+
 } from "@chakra-ui/react";
+import { Link as RLink } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
-export const SimpleCard = ({AuthorName, HeroImage, Summary, Title, WrittenOn, key}) => {
+export const SimpleCard = ({AuthorName, HeroImage, Summary, Title, WrittenOn, id}) => {
+  console.log("id", id);
   return (
-      <Card maxW='sm' key={key}>
+      <Card maxW='sm' >
         <CardBody>
           <Image
-              src={`http://localhost:8080${HeroImage}`}
+              src={HeroImage}
               alt='Green double couch with wooden legs'
               borderRadius='lg'
           />
@@ -41,8 +44,8 @@ export const SimpleCard = ({AuthorName, HeroImage, Summary, Title, WrittenOn, ke
         <Divider/>
         <CardFooter>
           <ButtonGroup spacing='2'>
-            <Link as={Button} variant='solid' colorScheme='blue'>
-              Read more
+            <Link as={RLink} to={`/view/article/${id}`} onClick={()=> console.log(`/views/article/${id}`)} variant='solid' colorScheme='blue'>
+          <Button>Read More</Button>
             </Link>
           </ButtonGroup>
         </CardFooter>

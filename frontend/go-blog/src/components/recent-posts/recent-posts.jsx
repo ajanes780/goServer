@@ -30,9 +30,12 @@ export const RecentPosts = () => {
           articles.length ?
               <SimpleGrid columns={[1, 2, 3]} spacing={10}  justifyContent='center'>
                 {articles.map((article) => {
+
+                  console.log("article", article.ID);
                   return (
                       <SimpleCard
-                          key={article.id}
+                          key={article.ID}
+                          id={article.ID}
                           Title={article.Title}
                           Summary={article.Summary}
                           AuthorName={article.AuthorName}
