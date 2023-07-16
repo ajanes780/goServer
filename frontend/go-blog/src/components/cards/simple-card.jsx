@@ -18,7 +18,7 @@ export const SimpleCard = ({AuthorName, HeroImage, Summary, Title, WrittenOn, ke
       <Card maxW='sm' key={key}>
         <CardBody>
           <Image
-              src={`http://localhost:8080/${HeroImage}`}
+              src={`http://localhost:8080${HeroImage}`}
               alt='Green double couch with wooden legs'
               borderRadius='lg'
           />

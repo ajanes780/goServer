@@ -75,10 +75,20 @@ func FindNthElement(data []byte, tag string, n int) (string, error) {
 }
 
 func uploadImageToS3(p string) string {
-	return ""
+	name := strings.Split(p, "/")
+	name = name[len(name)-1:]
+	path, err := AwsS3client.UploadFile(BUCKET_NAME, name[0], "/Users/aaronjanes/GolandProjects/goSever/backend"+p)
 
+	if err != nil {
+		fmt.Println("Error uploading file: ", err)
+		//os.Exit(1)
+	}
+
+	fmt.Printf("File uploaded successfully at %s\n", path)
+	return path
 }
 
+// https://questhenkart.medium.com/s3-image-uploads-via-aws-sdk-with-golang-63422857c548
 func parseArticle(htmlData []byte) Article {
 
 	title, err := FindNthElement(htmlData, "h1", 1)
@@ -88,7 +98,8 @@ func parseArticle(htmlData []byte) Article {
 	imageString, err := FindNthElement(htmlData, "img", 1)
 
 	//hero := uploadImageToS3(imageString)
-	hero := imageString
+	hero := uploadImageToS3(imageString)
+
 	summary, err := FindNthElement(htmlData, "p", 2)
 
 	authorName, err := FindNthElement(htmlData, "h4", 2)

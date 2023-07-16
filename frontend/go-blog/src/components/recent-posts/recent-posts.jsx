@@ -11,7 +11,7 @@ export const RecentPosts = () => {
     try {
       const result = await axios.get('http://localhost:8080/api/articles')
       console.log(result.data)
-      // setArticles(result.data)
+      setArticles(result.data)
 
     } catch (e) {
       console.log("Error", e)

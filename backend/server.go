@@ -146,6 +146,7 @@ func getAllArticlesHandler(w http.ResponseWriter, r *http.Request) {
 func getArticle(w http.ResponseWriter, r *http.Request) {
 
 	id := strings.TrimPrefix(r.URL.Path, "/api/article/")
+	fmt.Printf("id: %v \n", id)
 
 	result, err := GetArticleById(id)
 
@@ -154,6 +155,15 @@ func getArticle(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Can not find article with the id", http.StatusNotFound)
 		return
 	} else {
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+
+		// Set this to the methods you want to allow (e.g. "GET, POST, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Methods", "GET")
+
+		// Set this to the headers you want to allow, e.g. "Authorization, Content-Type"
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		err = json.NewEncoder(w).Encode(result)
 
 		if err != nil {
@@ -166,6 +176,7 @@ func getArticle(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	InitDB()
+	InitAws()
 	createBlogPosts()
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))

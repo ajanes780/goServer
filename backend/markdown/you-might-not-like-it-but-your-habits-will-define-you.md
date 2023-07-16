@@ -1,6 +1,6 @@
-
+ 
 # You might not like it, but your habits will define you.
-![cat pick](../images/cat.png)
+![cat pick](/images/cat.png)
 
 As human beings, we often like to think of ourselves as complex individuals with multifaceted personalities. We pride ourselves on our unique quirks, interests, and opinions. However, it's important to remember that our habits can significantly shape who we are and our life's direction.
 Whether we realize it or not, our daily habits are the building blocks of our lives. They can range from small, seemingly insignificant actions like hitting the snooze button or checking our phones first thing in the morning to larger, more impactful choices like exercising regularly or developing healthy eating habits. Over time, these habits become ingrained in our routines and define us as individuals.
