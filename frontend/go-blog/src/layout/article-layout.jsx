@@ -32,7 +32,7 @@ export const ArticleLayout = () => {
             {article &&
                 <>
                     <Text as='h1'>{article.title}</Text>
-                    <Image src={`http://localhost:8080${article.HeroImage}`} />
+                    <Image src={article.HeroImage} />
                     <div dangerouslySetInnerHTML={{__html: article.Content}}/>
                 </>
 
