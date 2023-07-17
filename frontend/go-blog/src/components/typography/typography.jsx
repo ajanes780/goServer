@@ -1,5 +1,5 @@
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import {atomOneDark} from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import {atomOneDark, nord} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import {Box, Heading, Text} from "@chakra-ui/react";
 
 
@@ -30,7 +30,7 @@ export const Code = ({children}) => {
 
   return (
       <Box mt={2} mb={2}>
-        <SyntaxHighlighter language="javascript" style={atomOneDark}>
+        <SyntaxHighlighter language="javascript" style={nord}>
           {children}
         </SyntaxHighlighter>
       </Box>

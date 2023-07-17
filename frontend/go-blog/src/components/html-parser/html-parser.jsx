@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { Code, Heading1, Heading2, Heading3, Heading4, Paragraph } from "../typography/typography.jsx";
 
 const COMPONENT_MAP = {
@@ -43,10 +43,10 @@ export const RichTextComponent = ({ htmlString }) => {
   };
 
   return (
-    <div>
-      {nodes.map((node, i) => {
+    <>
+      {nodes.map((node) => {
         return parseNode(node);
       })}
-    </div>
+    </>
   );
 };
