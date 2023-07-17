@@ -5,6 +5,7 @@ import (
 	"github.com/russross/blackfriday/v2"
 	"golang.org/x/net/html"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -126,6 +127,10 @@ func parseArticle(htmlData []byte) Article {
 
 	s := string(htmlData)
 
+	pattern := `<img[^>]*src="` + regexp.QuoteMeta(imageString) + `"[^>]*>`
+	re := regexp.MustCompile(pattern)
+	x := re.ReplaceAllString(s, "")
+
 	a := Article{
 		Title:     title,
 		Summary:   summary,
@@ -133,7 +138,7 @@ func parseArticle(htmlData []byte) Article {
 		Author:    author,
 		WrittenOn: writtenOn,
 		Draft:     false,
-		Content:   s,
+		Content:   x,
 	}
 	// return a pointer to the article
 	CreateArticle(a)
